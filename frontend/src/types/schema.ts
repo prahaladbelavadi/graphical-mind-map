@@ -25,19 +25,19 @@ const validNodeSchema = z.discriminatedUnion("type", [
       difficulty: z.enum(["easy", "medium", "hard"]),
     }),
   }),
-  baseNodeSchema.extend({
-    type: z.literal("decision"),
-    data: z.object({
-      question: z.string(),
-      options: z.array(z.string()),
-    }),
-  }),
-  baseNodeSchema.extend({
-    type: z.literal("conversational"),
-    data: z.object({
-      content: z.string(),
-    }),
-  }),
+  // baseNodeSchema.extend({
+  //   type: z.literal("decision"),
+  //   data: z.object({
+  //     question: z.string(),
+  //     options: z.array(z.string()),
+  //   }),
+  // }),
+  // baseNodeSchema.extend({
+  //   type: z.literal("conversational"),
+  //   data: z.object({
+  //     content: z.string(),
+  //   }),
+  // }),
 ]);
 
 // Unified Schema
@@ -52,7 +52,7 @@ export const nodeSchema = z
   })
   .superRefine((val, ctx) => {
     val.nodes.forEach((node, index) => {
-      if (!["task", "decision", "learning_flow", "error"].includes(node.type)) {
+      if (!["task",  "error"].includes(node.type)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: `Invalid node type '${node.type}' at index ${index}`,
