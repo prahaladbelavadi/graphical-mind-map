@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     model: openai('gpt-4o-mini'),
     schema: nodeSchema,
     prompt:
-      `Generate 3 tasks for a messages app in this context:` + context,
+      `Generate 3 nodes for this context:` + context,
   });
 
   return result.toTextStreamResponse();
