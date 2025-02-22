@@ -37,11 +37,12 @@ export function PromptNode({
             type: node.type,
             data: node.data,
             position: { x: 0, y: 0 },
+            parentId: id,
           };
           const newEdge = {
             id: `${id}-${newNodeId}`,
-            source: newNodeId,
-            target: id,
+            source: id,
+            target: newNodeId,
           };
           newNodes.push(newNode);
           newEdges.push(newEdge);
@@ -97,8 +98,16 @@ export function PromptNode({
         />
         <Button onClick={handleSubmit}>Generate</Button>
       </CardContent>
-      <Handle type="source" position={Position.Top} />
-      <Handle type="target" position={Position.Bottom} />
+      <Handle
+        type="target"
+        position={Position.Top}
+        isConnectable={isConnectable}
+      />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        isConnectable={isConnectable}
+      />
     </Card>
   );
 }

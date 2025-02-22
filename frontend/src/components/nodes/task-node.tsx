@@ -60,8 +60,16 @@ export function TaskNode({ id, data, isConnectable }: NodeProps<TaskNodeData>) {
         <p className="text-sm text-gray-500">{data.description}</p>
         <p className="text-sm text-gray-500">{data.difficulty}</p>
       </CardContent>
-      <Handle type="source" position={Position.Top} />
-      <Handle type="target" position={Position.Bottom} />
+      <Handle
+        type="target"
+        position={Position.Top}
+        isConnectable={isConnectable}
+      />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        isConnectable={isConnectable}
+      />
     </Card>
   );
 }
