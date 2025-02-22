@@ -215,7 +215,7 @@ def extract_themes_from_chunk(chunk_text: str) -> Dict:
         print(f"Raw response was: {extracted_content}")
         return {"theme": "", "subthemes": [], "summary": "", "nodeType": "informational"}
 
-def process_conversation(conversation_text: str) -> List[Theme]:
+def process_conversation(conversation_text: str, conversation_title: str = "Untitled") -> List[Theme]:
     """
     Processes a conversation text by splitting it into chunks,
     extracting themes from each chunk, and combining the results.
@@ -225,13 +225,13 @@ def process_conversation(conversation_text: str) -> List[Theme]:
     for idx, chunk in enumerate(chunks):
         print(f"\nProcessing chunk {idx+1}/{len(chunks)}...")
         themes_data = extract_themes_from_chunk(chunk.text)
-        # Create a Theme object from the returned JSON
         theme_obj = Theme(
             theme=themes_data.get("theme", ""),
             subthemes=themes_data.get("subthemes", []),
             summary=themes_data.get("summary", ""),
             nodeType=themes_data.get("nodeType", "informational"),
-            text_data=chunk.text
+            text_data=chunk.text,
+            conversation_title=conversation_title
         )
         chunk.themes = [theme_obj]
         print("\nExtracted Theme for this chunk:")
@@ -262,7 +262,7 @@ if __name__ == "__main__":
     try:
         # Get the absolute path to the project root
         project_root = Path(__file__).resolve().parents[3]
-        file_path = project_root / "userdata" / "test_conversations.json"
+        file_path = project_root / "userdata" / "conversations.json"
         parsed_convos = run_conversation_parsing(file_path)
         # Process all conversations
         print(f"\nFound {len(parsed_convos)} conversations to analyze")
@@ -270,7 +270,7 @@ if __name__ == "__main__":
             print(f"\n\nAnalyzing conversation: {convo['title']}\n")
             print("=" * 50)
             full_text = "\n".join(msg["content"] for msg in convo["messages"])
-            data_obj = process_conversation(full_text)
+            data_obj = process_conversation(full_text, conversation_title=convo['title'])
             opensearch_service.insert_data_into_opensearch(data_obj)
             print("=" * 50)
     except Exception as e:

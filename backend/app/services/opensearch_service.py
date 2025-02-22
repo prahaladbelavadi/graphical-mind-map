@@ -37,6 +37,7 @@ class OpenSearchService:
                             "summary": {"type": "text"},
                             "nodeType": {"type": "keyword"},
                             "text_data": {"type": "text"},
+                            "conversation_title": {"type": "keyword"},
                             "timestamp": {"type": "date"}
                         }
                     }
@@ -51,6 +52,7 @@ class OpenSearchService:
                     "summary": theme.summary,
                     "nodeType": theme.nodeType,
                     "text_data": theme.text_data,
+                    "conversation_title": theme.conversation_title,
                     "timestamp": datetime.utcnow().isoformat()
                 }
                 

@@ -14,6 +14,7 @@ class Theme:
     summary: str
     nodeType: str = "informational"
     text_data: str = ""
+    conversation_title: str = "Untitled"
 
 @dataclass
 class Chunk:
