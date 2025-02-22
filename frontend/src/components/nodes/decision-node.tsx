@@ -18,8 +18,13 @@ export function DecisionNode({
   data,
   isConnectable,
 }: NodeProps<DecisionNodeData>) {
+<<<<<<< Updated upstream
   const [question, setQuestion] = useState(data.question);
   const [options, setOptions] = useState(data.options);
+=======
+  const [prompt, setPrompt] = useState(data.prompt);
+  //   don't bring it in from parent component, this is user feedback
+>>>>>>> Stashed changes
   const [option, setOption] = useState("");
   const { submit, isLoading, error, object } = useObject({
     id,
