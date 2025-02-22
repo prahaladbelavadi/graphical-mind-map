@@ -14,7 +14,7 @@ export type PromptNodeData = Node<{
 export function PromptNode({ data, isConnectable }: NodeProps<PromptNodeData>) {
   const [prompt, setPrompt] = useState(data.prompt);
   const { submit, isLoading, error, object } = useObject({
-    api: "/api",
+    api: "/api/ai",
     schema: nodeSchema,
     onFinish: (event) => {
       console.log(event);
