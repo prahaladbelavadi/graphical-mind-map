@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Run run.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/services/parse_chatgpt_conversation.py",
+            "console": "integratedTerminal"
+        }
+    ]
+}

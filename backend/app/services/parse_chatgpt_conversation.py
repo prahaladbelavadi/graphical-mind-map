@@ -1,9 +1,21 @@
 import json
 from datetime import datetime
 from typing import List, Dict
-from openai import OpenAI
+import openai
 from dotenv import load_dotenv
 import os
+from models import Message, Theme, Chunk
+from openai import OpenAI
+from pathlib import Path
+import sys
+
+# Add the backend directory to Python path
+backend_dir = str(Path(__file__).resolve().parents[2])
+if backend_dir not in sys.path:
+    sys.path.append(backend_dir)
+
+from app.services.opensearch_service import OpenSearchService
+from opensearchpy import OpenSearch
 
 # --- Configuration ---
 # Load environment variables
@@ -12,6 +24,20 @@ load_dotenv()
 # Get OpenAI settings from environment
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 COMPLETION_MODEL = os.getenv("COMPLETION_MODEL", "gpt-4-turbo-preview")
+
+# OpenSearch settings
+OPENSEARCH_HOST = os.getenv("OPENSEARCH_HOST", "localhost")
+OPENSEARCH_PORT = int(os.getenv("OPENSEARCH_PORT", "9200"))
+OPENSEARCH_USER = os.getenv("OPENSEARCH_USERNAME", "admin")
+OPENSEARCH_PASS = os.getenv("OPENSEARCH_PASSWORD", "admin")
+
+# Initialize OpenSearch client
+opensearch_client = OpenSearch(
+    hosts=[{'host': OPENSEARCH_HOST, 'port': OPENSEARCH_PORT}],
+    http_auth=(OPENSEARCH_USER, OPENSEARCH_PASS),
+    use_ssl=False
+)
+opensearch_service = OpenSearchService(opensearch_client)
 
 # --- Conversation Parsing Functions ---
 
@@ -88,39 +114,80 @@ def display_conversations(conversations: List[Dict]):
 
 # --- Theme Extraction Functions ---
 
-def chunk_conversation(conversation_text: str, max_length: int = 1000) -> List[str]:
-    """
-    Split a long conversation text into chunks of up to max_length characters.
-    (This simple implementation splits by character count; you may wish to improve it.)
-    """
-    return [conversation_text[i:i+max_length] for i in range(0, len(conversation_text), max_length)]
+def chunk_conversation(conversation_text: str, max_length: int = 1000) -> List[Chunk]:
+    """Split conversation into chunks with metadata."""
+    chunks = []
+    current_chunk = []
+    current_length = 0
+    messages = conversation_text.split('\n')
+    
+    for i, message in enumerate(messages):
+        message_length = len(message)
+        if current_length + message_length > max_length and current_chunk:
+            # Create a new chunk from the current set of messages.
+            chunk_text = '\n'.join(current_chunk)
+            chunk_messages = [
+                Message(
+                    author=msg.split(': ')[0],
+                    content=': '.join(msg.split(': ')[1:]) if ': ' in msg else msg,
+                    timestamp="N/A"
+                ) for msg in current_chunk
+            ]
+            chunks.append(Chunk(
+                text=chunk_text,
+                themes=[],
+                start_index=i - len(current_chunk),
+                end_index=i,
+                messages=chunk_messages
+            ))
+            current_chunk = []
+            current_length = 0
+        
+        current_chunk.append(message)
+        current_length += message_length
+    
+    # Process the final chunk
+    if current_chunk:
+        chunk_text = '\n'.join(current_chunk)
+        chunk_messages = [
+            Message(
+                author=msg.split(': ')[0],
+                content=': '.join(msg.split(': ')[1:]) if ': ' in msg else msg,
+                timestamp="N/A"
+            ) for msg in current_chunk
+        ]
+        chunks.append(Chunk(
+            text=chunk_text,
+            themes=[],
+            start_index=len(messages) - len(current_chunk),
+            end_index=len(messages),
+            messages=chunk_messages
+        ))
+    
+    return chunks
 
 def extract_themes_from_chunk(chunk_text: str) -> Dict:
     """
-    Uses the OpenAI API to extract themes and sub-themes from a conversation chunk.
+    Uses the OpenAI API to extract a theme and sub-themes from a conversation chunk.
     The prompt instructs the API to return a JSON structure with theme details.
     """
+    extracted_content = ""
     client = OpenAI(api_key=OPENAI_API_KEY)
-
     prompt = f"""
-You are an AI that analyzes conversations and extracts themes. Given the conversation below, identify the main themes and sub-themes, and provide a short summary.
-Please respond with valid JSON in the following format:
+    You are an AI that analyzes conversations and extracts a theme. Given the conversation below, identify the main theme and sub-themes, and provide a short summary.
+    Please respond with valid JSON in the following format:
 
-{{
-    "themes": [
-        {{
-            "theme": "Theme title",
-            "subthemes": ["Subtheme1", "Subtheme2"],
-            "summary": "A short summary of this conversation chunk as it relates to this theme.",
-            "nodeType": "informational"  // or "personal"
-        }},
-        ...
-    ]
-}}
+    {{
+        "theme": "Theme title",
+        "subthemes": ["Subtheme1", "Subtheme2"],
+        "summary": "A short summary of this conversation chunk as it relates to this theme.",
+        "nodeType": "informational"
+    }}
 
-Conversation:
-\"\"\"{chunk_text}\"\"\"
+    Conversation:
+    \"\"\"{chunk_text}\"\"\"
     """
+
     try:
         response = client.chat.completions.create(
             model=COMPLETION_MODEL,
@@ -132,27 +199,46 @@ Conversation:
             max_tokens=500,
         )
         extracted_content = response.choices[0].message.content
-        print("\nRaw OpenAI response:", extracted_content)  # Debug print
-        themes_data = json.loads(extracted_content)
+        print("\nRaw OpenAI response:", extracted_content)
+
+        # Clean and parse the JSON
+        extracted_content = extracted_content.strip()
+        start = extracted_content.find("{")
+        end = extracted_content.rfind("}")
+        if start != -1 and end != -1:
+            extracted_content = extracted_content[start:end + 1]
+            return json.loads(extracted_content)
+        else:
+            raise ValueError("No valid JSON found in response")
     except Exception as e:
         print(f"Error extracting themes: {str(e)}")
-        print(f"Response content type: {type(response) if 'response' in locals() else 'No response'}")
-        themes_data = {"themes": []}
-    
-    return themes_data
+        print(f"Raw response was: {extracted_content}")
+        return {"theme": "", "subthemes": [], "summary": "", "nodeType": "informational"}
 
-def process_conversation(conversation_text: str) -> List[Dict]:
+def process_conversation(conversation_text: str) -> List[Theme]:
     """
     Processes a conversation text by splitting it into chunks,
     extracting themes from each chunk, and combining the results.
     """
     chunks = chunk_conversation(conversation_text)
+    all_themes = []
     for idx, chunk in enumerate(chunks):
         print(f"\nProcessing chunk {idx+1}/{len(chunks)}...")
-        themes_data = extract_themes_from_chunk(chunk)
-        print("\nExtracted Themes for this chunk:")
-        print(json.dumps(themes_data.get("themes", []), indent=2))
-    return []
+        themes_data = extract_themes_from_chunk(chunk.text)
+        # Create a Theme object from the returned JSON
+        theme_obj = Theme(
+            theme=themes_data.get("theme", ""),
+            subthemes=themes_data.get("subthemes", []),
+            summary=themes_data.get("summary", ""),
+            nodeType=themes_data.get("nodeType", "informational"),
+            text_data=chunk.text
+        )
+        chunk.themes = [theme_obj]
+        print("\nExtracted Theme for this chunk:")
+        print(json.dumps([vars(t) for t in chunk.themes], indent=2))
+        all_themes.append(theme_obj)
+        print("All themes so far:", all_themes)
+    return all_themes
 
 # --- Entry Points for API Integration ---
 
@@ -164,7 +250,7 @@ def run_conversation_parsing(file_path: str) -> List[Dict]:
     chat_data = load_chatgpt_json(file_path)
     return parse_conversations(chat_data)
 
-def run_theme_extraction(conversation_text: str) -> List[Dict]:
+def run_theme_extraction(conversation_text: str) -> List[Theme]:
     """
     Entry point for theme extraction.
     Processes a conversation text to extract themes.
@@ -174,7 +260,9 @@ def run_theme_extraction(conversation_text: str) -> List[Dict]:
 # --- Main Function for Testing Purposes ---
 if __name__ == "__main__":
     try:
-        file_path = "../../../userdata/test_conversations.json"
+        # Get the absolute path to the project root
+        project_root = Path(__file__).resolve().parents[3]
+        file_path = project_root / "userdata" / "test_conversations.json"
         parsed_convos = run_conversation_parsing(file_path)
         # Process all conversations
         print(f"\nFound {len(parsed_convos)} conversations to analyze")
@@ -182,7 +270,8 @@ if __name__ == "__main__":
             print(f"\n\nAnalyzing conversation: {convo['title']}\n")
             print("=" * 50)
             full_text = "\n".join(msg["content"] for msg in convo["messages"])
-            process_conversation(full_text)
+            data_obj = process_conversation(full_text)
+            opensearch_service.insert_data_into_opensearch(data_obj)
             print("=" * 50)
     except Exception as e:
         print("Conversation parsing test failed:", e)

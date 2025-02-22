@@ -23,4 +23,14 @@ class Theme(BaseModel):
     nodeType: str = "informational"  # or "personal"
 
 class ThemeResponse(BaseModel):
-    themes: List[Theme] 
+    themes: List[Theme]
+
+class Chunk(BaseModel):
+    text: str
+    themes: List[Theme]
+    start_index: int
+    end_index: int
+    messages: List[Message]
+
+    def __str__(self):
+        return f"Chunk(messages={len(self.messages)}, themes={len(self.themes)})" 
