@@ -10,17 +10,15 @@ import { nodeSchema } from "@/types/schema";
 import { generateId } from "ai";
 import useStore from "@/store/node-store";
 import { AppNode } from "@/store/types";
-export type PromptNodeData = Node<{
-  prompt: string;
+export type TaskNodeData = Node<{
+  name: string;
+  description: string;
+  difficulty: "easy" | "medium" | "hard";
 }>;
 
-export function PromptNode({
-  id,
-  data,
-  isConnectable,
-}: NodeProps<PromptNodeData>) {
+export function TaskNode({ id, data, isConnectable }: NodeProps<TaskNodeData>) {
   const { nodes, edges, setNodes, setEdges } = useStore();
-  const [prompt, setPrompt] = useState(data.prompt);
+
   const { submit, isLoading, error, object } = useObject({
     id,
     api: "/api/ai",
@@ -40,8 +38,8 @@ export function PromptNode({
           };
           const newEdge = {
             id: `${id}-${newNodeId}`,
-            source: newNodeId,
-            target: id,
+            source: id,
+            target: newNodeId,
           };
           newNodes.push(newNode);
           newEdges.push(newEdge);
@@ -63,12 +61,9 @@ export function PromptNode({
   return (
     <Card>
       <CardContent className="flex flex-col gap-2 p-2">
-        <Input
-          type="text"
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-        />
-        <Button onClick={handleSubmit}>Generate</Button>
+        <h3 className="text-lg font-bold">{data.name}</h3>
+        <p className="text-sm text-gray-500">{data.description}</p>
+        <p className="text-sm text-gray-500">{data.difficulty}</p>
       </CardContent>
       <Handle type="source" position={Position.Top} />
       <Handle type="target" position={Position.Bottom} />
