@@ -8,16 +8,19 @@ import { Button } from "../ui/button";
 import { experimental_useObject as useObject } from "@ai-sdk/react";
 import { nodeSchema } from "@/types/schema";
 import { generateId } from "ai";
-export type PromptNodeData = Node<{
+// import { CheckIcon, XIcon } from "@heroicons/react/outline";
+export type DecisionNodeData = Node<{
   prompt: string;
+  option: string;
 }>;
 
 export function DecisionNode({
   id,
   data,
   isConnectable,
-}: NodeProps<PromptNodeData>) {
+}: NodeProps<DecisionNodeData>) {
   const [prompt, setPrompt] = useState(data.prompt);
+  const [option, setOption] = useState("");
   const { submit, isLoading, error, object } = useObject({
     id,
     api: "/api/ai",
@@ -48,18 +51,21 @@ export function DecisionNode({
   //     console.log(object);
   //   }
   // }, [object]);
-  const handleSubmit = () => {
+  const handleSubmit = (option: string) => {
+    setOption(option);
     submit({ prompt });
   };
   return (
     <Card>
       <CardContent className="flex flex-col gap-2 p-2">
-        <Input
+        {/* <Input
           type="text"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-        />
-        <Button onClick={handleSubmit}>Generate</Button>
+        /> */}
+        {/* <Button onClick={handleSubmit}>Generate</Button> */}
+        <Button onClick={() => handleSubmit("YES")}>Yes</Button>
+        <Button onClick={() => handleSubmit("NO")}>No</Button>
       </CardContent>
       <Handle type="source" position={Position.Top} />
       <Handle type="target" position={Position.Bottom} />
