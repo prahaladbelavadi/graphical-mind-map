@@ -9,7 +9,7 @@ export type PromptNodeData = Node<{
 }>
 export function PromptNode({ data, isConnectable }: NodeProps<PromptNodeData>) {
     const [prompt, setPrompt] = useState(data.prompt);
-  return <Card className='bg-white rounded-md p-2'>
+  return <Card >
 <CardContent>
     <Input type="text" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
     </CardContent>
