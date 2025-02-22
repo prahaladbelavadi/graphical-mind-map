@@ -1,0 +1,532 @@
+[
+    {
+        "title": "Chat about Weather",
+        "create_time": 1709260369.029902,
+        "update_time": 1709260936.141354,
+        "mapping": {
+            "msg-1": {
+                "id": "msg-1",
+                "message": {
+                    "id": "msg-1",
+                    "author": { "role": "user", "name": null, "metadata": {} },
+                    "create_time": 1709260369.030000,
+                    "update_time": null,
+                    "content": {
+                        "content_type": "text",
+                        "parts": [
+                            "What's the weather like today?"
+                        ]
+                    },
+                    "status": "finished_successfully",
+                    "end_turn": false,
+                    "weight": 1.0,
+                    "metadata": {},
+                    "recipient": "all"
+                },
+                "parent": null,
+                "children": [
+                    "msg-2"
+                ]
+            },
+            "msg-2": {
+                "id": "msg-2",
+                "message": {
+                    "id": "msg-2",
+                    "author": { "role": "assistant", "name": null, "metadata": {} },
+                    "create_time": 1709260375.000000,
+                    "update_time": null,
+                    "content": {
+                        "content_type": "text",
+                        "parts": [
+                            "It's sunny and 75°F today."
+                        ]
+                    },
+                    "status": "finished_successfully",
+                    "end_turn": true,
+                    "weight": 1.0,
+                    "metadata": {},
+                    "recipient": "all"
+                },
+                "parent": "msg-1",
+                "children": []
+            }
+        }
+    },
+    {
+        "title": "Hiking Recommendations",
+        "create_time": 1709261000.000000,
+        "update_time": 1709261100.000000,
+        "mapping": {
+            "msg-3": {
+                "id": "msg-3",
+                "message": {
+                    "id": "msg-3",
+                    "author": { "role": "user", "name": null, "metadata": {} },
+                    "create_time": 1709261000.100000,
+                    "update_time": null,
+                    "content": {
+                        "content_type": "text",
+                        "parts": [
+                            "I'm planning a hike. Any recommendations?"
+                        ]
+                    },
+                    "status": "finished_successfully",
+                    "end_turn": false,
+                    "weight": 1.0,
+                    "metadata": {},
+                    "recipient": "all"
+                },
+                "parent": null,
+                "children": [
+                    "msg-4"
+                ]
+            },
+            "msg-4": {
+                "id": "msg-4",
+                "message": {
+                    "id": "msg-4",
+                    "author": { "role": "assistant", "name": null, "metadata": {} },
+                    "create_time": 1709261010.200000,
+                    "update_time": null,
+                    "content": {
+                        "content_type": "text",
+                        "parts": [
+                            "Consider trying the Blue Ridge Trail; it's scenic and not too strenuous."
+                        ]
+                    },
+                    "status": "finished_successfully",
+                    "end_turn": true,
+                    "weight": 1.0,
+                    "metadata": {},
+                    "recipient": "all"
+                },
+                "parent": "msg-3",
+                "children": []
+            }
+        }
+    },
+    {
+        "title": "Tech Product Launch",
+        "create_time": 1709261200.000000,
+        "update_time": 1709261300.000000,
+        "mapping": {
+            "msg-5": {
+                "id": "msg-5",
+                "message": {
+                    "id": "msg-5",
+                    "author": { "role": "user", "name": null, "metadata": {} },
+                    "create_time": 1709261200.050000,
+                    "update_time": null,
+                    "content": {
+                        "content_type": "text",
+                        "parts": [
+                            "Did you hear about the new smartphone launch from TechCorp?"
+                        ]
+                    },
+                    "status": "finished_successfully",
+                    "end_turn": false,
+                    "weight": 1.0,
+                    "metadata": {},
+                    "recipient": "all"
+                },
+                "parent": null,
+                "children": [
+                    "msg-6"
+                ]
+            },
+            "msg-6": {
+                "id": "msg-6",
+                "message": {
+                    "id": "msg-6",
+                    "author": { "role": "assistant", "name": null, "metadata": {} },
+                    "create_time": 1709261210.150000,
+                    "update_time": null,
+                    "content": {
+                        "content_type": "text",
+                        "parts": [
+                            "Yes, the specs look impressive, especially the new AI features and improved battery life."
+                        ]
+                    },
+                    "status": "finished_successfully",
+                    "end_turn": true,
+                    "weight": 1.0,
+                    "metadata": {},
+                    "recipient": "all"
+                },
+                "parent": "msg-5",
+                "children": []
+            }
+        }
+    },
+    {
+        "title": "Python Programming Help",
+        "create_time": 1709261400.000000,
+        "update_time": 1709261500.000000,
+        "mapping": {
+            "msg-7": {
+                "id": "msg-7",
+                "message": {
+                    "id": "msg-7",
+                    "author": { "role": "user", "name": null, "metadata": {} },
+                    "create_time": 1709261400.075000,
+                    "update_time": null,
+                    "content": {
+                        "content_type": "text",
+                        "parts": [
+                            "I'm having trouble debugging a Python script. Any ideas on what to check first?"
+                        ]
+                    },
+                    "status": "finished_successfully",
+                    "end_turn": false,
+                    "weight": 1.0,
+                    "metadata": {},
+                    "recipient": "all"
+                },
+                "parent": null,
+                "children": [
+                    "msg-8"
+                ]
+            },
+            "msg-8": {
+                "id": "msg-8",
+                "message": {
+                    "id": "msg-8",
+                    "author": { "role": "assistant", "name": null, "metadata": {} },
+                    "create_time": 1709261410.125000,
+                    "update_time": null,
+                    "content": {
+                        "content_type": "text",
+                        "parts": [
+                            "Check for syntax errors first, then review the traceback to pinpoint the issue."
+                        ]
+                    },
+                    "status": "finished_successfully",
+                    "end_turn": true,
+                    "weight": 1.0,
+                    "metadata": {},
+                    "recipient": "all"
+                },
+                "parent": "msg-7",
+                "children": []
+            }
+        }
+    },
+    {
+        "title": "Cloud Computing Discussion",
+        "create_time": 1709261600.000000,
+        "update_time": 1709261700.000000,
+        "mapping": {
+            "msg-9": {
+                "id": "msg-9",
+                "message": {
+                    "id": "msg-9",
+                    "author": { "role": "user", "name": null, "metadata": {} },
+                    "create_time": 1709261600.085000,
+                    "update_time": null,
+                    "content": {
+                        "content_type": "text",
+                        "parts": [
+                            "Between AWS and Azure, which do you think offers better scalability?"
+                        ]
+                    },
+                    "status": "finished_successfully",
+                    "end_turn": false,
+                    "weight": 1.0,
+                    "metadata": {},
+                    "recipient": "all"
+                },
+                "parent": null,
+                "children": [
+                    "msg-10"
+                ]
+            },
+            "msg-10": {
+                "id": "msg-10",
+                "message": {
+                    "id": "msg-10",
+                    "author": { "role": "assistant", "name": null, "metadata": {} },
+                    "create_time": 1709261610.185000,
+                    "update_time": null,
+                    "content": {
+                        "content_type": "text",
+                        "parts": [
+                            "Both have their strengths, but AWS generally offers more mature scalability features."
+                        ]
+                    },
+                    "status": "finished_successfully",
+                    "end_turn": true,
+                    "weight": 1.0,
+                    "metadata": {},
+                    "recipient": "all"
+                },
+                "parent": "msg-9",
+                "children": []
+            }
+        }
+    },
+    {
+        "title": "AI Chatbot Ideas",
+        "create_time": 1709261800.000000,
+        "update_time": 1709261900.000000,
+        "mapping": {
+            "msg-11": {
+                "id": "msg-11",
+                "message": {
+                    "id": "msg-11",
+                    "author": { "role": "user", "name": null, "metadata": {} },
+                    "create_time": 1709261800.095000,
+                    "update_time": null,
+                    "content": {
+                        "content_type": "text",
+                        "parts": [
+                            "I'm brainstorming ideas for a new AI chatbot. What features should it have?"
+                        ]
+                    },
+                    "status": "finished_successfully",
+                    "end_turn": false,
+                    "weight": 1.0,
+                    "metadata": {},
+                    "recipient": "all"
+                },
+                "parent": null,
+                "children": [
+                    "msg-12"
+                ]
+            },
+            "msg-12": {
+                "id": "msg-12",
+                "message": {
+                    "id": "msg-12",
+                    "author": { "role": "assistant", "name": null, "metadata": {} },
+                    "create_time": 1709261810.195000,
+                    "update_time": null,
+                    "content": {
+                        "content_type": "text",
+                        "parts": [
+                            "Consider integrating natural language understanding, personalized responses, and a knowledge base for contextual accuracy."
+                        ]
+                    },
+                    "status": "finished_successfully",
+                    "end_turn": true,
+                    "weight": 1.0,
+                    "metadata": {},
+                    "recipient": "all"
+                },
+                "parent": "msg-11",
+                "children": []
+            }
+        }
+    },
+    {
+        "title": "Gadget Recommendations",
+        "create_time": 1709262000.000000,
+        "update_time": 1709262100.000000,
+        "mapping": {
+            "msg-13": {
+                "id": "msg-13",
+                "message": {
+                    "id": "msg-13",
+                    "author": { "role": "user", "name": null, "metadata": {} },
+                    "create_time": 1709262000.105000,
+                    "update_time": null,
+                    "content": {
+                        "content_type": "text",
+                        "parts": [
+                            "I'm looking for a new laptop. Any recommendations for a tech-savvy user?"
+                        ]
+                    },
+                    "status": "finished_successfully",
+                    "end_turn": false,
+                    "weight": 1.0,
+                    "metadata": {},
+                    "recipient": "all"
+                },
+                "parent": null,
+                "children": [
+                    "msg-14"
+                ]
+            },
+            "msg-14": {
+                "id": "msg-14",
+                "message": {
+                    "id": "msg-14",
+                    "author": { "role": "assistant", "name": null, "metadata": {} },
+                    "create_time": 1709262010.205000,
+                    "update_time": null,
+                    "content": {
+                        "content_type": "text",
+                        "parts": [
+                            "I recommend checking out the latest models from TechBrand. They offer great performance and build quality."
+                        ]
+                    },
+                    "status": "finished_successfully",
+                    "end_turn": true,
+                    "weight": 1.0,
+                    "metadata": {},
+                    "recipient": "all"
+                },
+                "parent": "msg-13",
+                "children": []
+            }
+        }
+    },
+    {
+        "title": "Cybersecurity Trends",
+        "create_time": 1709262200.000000,
+        "update_time": 1709262300.000000,
+        "mapping": {
+            "msg-15": {
+                "id": "msg-15",
+                "message": {
+                    "id": "msg-15",
+                    "author": { "role": "user", "name": null, "metadata": {} },
+                    "create_time": 1709262200.115000,
+                    "update_time": null,
+                    "content": {
+                        "content_type": "text",
+                        "parts": [
+                            "What are the latest trends in cybersecurity this year?"
+                        ]
+                    },
+                    "status": "finished_successfully",
+                    "end_turn": false,
+                    "weight": 1.0,
+                    "metadata": {},
+                    "recipient": "all"
+                },
+                "parent": null,
+                "children": [
+                    "msg-16"
+                ]
+            },
+            "msg-16": {
+                "id": "msg-16",
+                "message": {
+                    "id": "msg-16",
+                    "author": { "role": "assistant", "name": null, "metadata": {} },
+                    "create_time": 1709262210.215000,
+                    "update_time": null,
+                    "content": {
+                        "content_type": "text",
+                        "parts": [
+                            "There's been a growing focus on zero-trust architectures and improved threat intelligence integration."
+                        ]
+                    },
+                    "status": "finished_successfully",
+                    "end_turn": true,
+                    "weight": 1.0,
+                    "metadata": {},
+                    "recipient": "all"
+                },
+                "parent": "msg-15",
+                "children": []
+            }
+        }
+    },
+    {
+        "title": "Software Development Tools",
+        "create_time": 1709262400.000000,
+        "update_time": 1709262500.000000,
+        "mapping": {
+            "msg-17": {
+                "id": "msg-17",
+                "message": {
+                    "id": "msg-17",
+                    "author": { "role": "user", "name": null, "metadata": {} },
+                    "create_time": 1709262400.125000,
+                    "update_time": null,
+                    "content": {
+                        "content_type": "text",
+                        "parts": [
+                            "Which IDE do you prefer for Python development, VS Code or PyCharm?"
+                        ]
+                    },
+                    "status": "finished_successfully",
+                    "end_turn": false,
+                    "weight": 1.0,
+                    "metadata": {},
+                    "recipient": "all"
+                },
+                "parent": null,
+                "children": [
+                    "msg-18"
+                ]
+            },
+            "msg-18": {
+                "id": "msg-18",
+                "message": {
+                    "id": "msg-18",
+                    "author": { "role": "assistant", "name": null, "metadata": {} },
+                    "create_time": 1709262410.225000,
+                    "update_time": null,
+                    "content": {
+                        "content_type": "text",
+                        "parts": [
+                            "I prefer VS Code because of its lightweight design and extensibility."
+                        ]
+                    },
+                    "status": "finished_successfully",
+                    "end_turn": true,
+                    "weight": 1.0,
+                    "metadata": {},
+                    "recipient": "all"
+                },
+                "parent": "msg-17",
+                "children": []
+            }
+        }
+    },
+    {
+        "title": "Tech Innovations in 2024",
+        "create_time": 1709262600.000000,
+        "update_time": 1709262700.000000,
+        "mapping": {
+            "msg-19": {
+                "id": "msg-19",
+                "message": {
+                    "id": "msg-19",
+                    "author": { "role": "user", "name": null, "metadata": {} },
+                    "create_time": 1709262600.135000,
+                    "update_time": null,
+                    "content": {
+                        "content_type": "text",
+                        "parts": [
+                            "What emerging technologies do you think will transform industries in 2024?"
+                        ]
+                    },
+                    "status": "finished_successfully",
+                    "end_turn": false,
+                    "weight": 1.0,
+                    "metadata": {},
+                    "recipient": "all"
+                },
+                "parent": null,
+                "children": [
+                    "msg-20"
+                ]
+            },
+            "msg-20": {
+                "id": "msg-20",
+                "message": {
+                    "id": "msg-20",
+                    "author": { "role": "assistant", "name": null, "metadata": {} },
+                    "create_time": 1709262610.235000,
+                    "update_time": null,
+                    "content": {
+                        "content_type": "text",
+                        "parts": [
+                            "I believe advancements in AI, quantum computing, and 5G connectivity will drive major innovations next year."
+                        ]
+                    },
+                    "status": "finished_successfully",
+                    "end_turn": true,
+                    "weight": 1.0,
+                    "metadata": {},
+                    "recipient": "all"
+                },
+                "parent": "msg-19",
+                "children": []
+            }
+        }
+    }
+]

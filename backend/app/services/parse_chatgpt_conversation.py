@@ -173,15 +173,16 @@ def run_theme_extraction(conversation_text: str) -> List[Dict]:
 
 # --- Main Function for Testing Purposes ---
 if __name__ == "__main__":
-    # Test Conversation Parsing
     try:
-        file_path = "../../../userdata/conversations.json"  # Update path as needed
+        file_path = "../../../userdata/test_conversations.json"
         parsed_convos = run_conversation_parsing(file_path)
-        # Take the first conversation for testing
-        if parsed_convos:
-            first_convo = parsed_convos[0]
-            print(f"\nAnalyzing conversation: {first_convo['title']}\n")
-            full_text = "\n".join(msg["content"] for msg in first_convo["messages"])
+        # Process all conversations
+        print(f"\nFound {len(parsed_convos)} conversations to analyze")
+        for convo in parsed_convos:
+            print(f"\n\nAnalyzing conversation: {convo['title']}\n")
+            print("=" * 50)
+            full_text = "\n".join(msg["content"] for msg in convo["messages"])
             process_conversation(full_text)
+            print("=" * 50)
     except Exception as e:
         print("Conversation parsing test failed:", e)
