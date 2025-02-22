@@ -9,21 +9,22 @@ export async function POST(req: Request) {
   const context = await req.json();
   const systemPrompt = `
   You are a helpful assistant that generates nodes for a flow.
-  `
-  const messages = [
-    {
-      role: "system",
-      content: systemPrompt,
-    },
-    {
-      role: "user",
-      content:  context,
-    },
-  ] as Message[];
-  const result = streamObject({
-    model: openai('gpt-4o-mini'),
+  You must return an object with a 'nodes' array containing task nodes.
+  Each task node must have:
+  - type: "task"
+  - data: { name: string, description: string, difficulty: "easy" | "medium" | "hard" }
+  `;
+  
+  const result = await streamObject({
+    model: openai('o3-mini-2025-01-31'),
     schema: nodeSchema,
-    messages,
+    messages: [
+      {
+        role: "system",
+        content: systemPrompt,
+      },
+      { role: "user", content: context.prompt },
+    ],
   });
 
   return result.toTextStreamResponse();

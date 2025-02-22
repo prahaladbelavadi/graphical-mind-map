@@ -1,7 +1,7 @@
 "use client";
 
 import { Handle, Node, NodeProps, Position } from "@xyflow/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "../ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -11,15 +11,30 @@ export type PromptNodeData = Node<{
   prompt: string;
 }>;
 
-export function PromptNode({ data, isConnectable }: NodeProps<PromptNodeData>) {
+export function PromptNode({
+  id,
+  data,
+  isConnectable,
+}: NodeProps<PromptNodeData>) {
   const [prompt, setPrompt] = useState(data.prompt);
   const { submit, isLoading, error, object } = useObject({
+    id,
     api: "/api/ai",
     schema: nodeSchema,
     onFinish: (event) => {
       console.log(event);
+      if (event.object?.nodes.length) {
+        event.object.nodes.forEach((node) => {
+          console.log(node);
+        });
+      }
     },
   });
+  useEffect(() => {
+    if (object) {
+      console.log(object);
+    }
+  }, [object]);
   const handleSubmit = () => {
     submit({ prompt });
   };
