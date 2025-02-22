@@ -6,7 +6,7 @@ import '@xyflow/react/dist/style.css';
 import { useMemo } from "react";
 
 const initialNodes = [
-  { id: '1', type: 'prompt', position: { x: 0, y: 0 }, data: { prompt: 'Hello, world!' } },
+  { id: '1', type: 'prompt', position: { x: 0, y: 0 }, data: { prompt: '' } },
 ];
 
 const initialEdges = [
