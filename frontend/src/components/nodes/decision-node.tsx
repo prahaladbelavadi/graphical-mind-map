@@ -20,7 +20,7 @@ export function DecisionNode({
   data,
   isConnectable,
 }: NodeProps<DecisionNodeData>) {
-  const { setNodes, setEdges } = useStore();
+  const { setNodes, setEdges, nodes, edges } = useStore();
   const [question, setQuestion] = useState(data.question);
   const [options, setOptions] = useState(data.options);
   const [option, setOption] = useState("");
@@ -58,8 +58,8 @@ export function DecisionNode({
           newEdges.push(newEdge);
         });
       }
-      setNodes(newNodes);
-      setEdges(newEdges);
+      setEdges([...edges, ...newEdges]);
+      setNodes([...nodes, ...newNodes]);
     },
   });
   // Streamed object
@@ -100,7 +100,7 @@ export function DecisionNode({
     });
   };
   return (
-    <Card className="w-300px w-[300px]">
+    <Card className="w-[300px]">
       <CardHeader>
         <CardTitle>{question}</CardTitle>
       </CardHeader>
