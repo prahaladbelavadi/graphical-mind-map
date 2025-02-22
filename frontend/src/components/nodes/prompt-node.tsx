@@ -7,6 +7,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { experimental_useObject as useObject } from "@ai-sdk/react";
 import { nodeSchema } from "@/types/schema";
+import { generateId } from "ai";
 export type PromptNodeData = Node<{
   prompt: string;
 }>;
@@ -21,20 +22,32 @@ export function PromptNode({
     id,
     api: "/api/ai",
     schema: nodeSchema,
-    onFinish: (event) => {
-      console.log(event);
-      if (event.object?.nodes.length) {
-        event.object.nodes.forEach((node) => {
-          console.log(node);
+    onFinish: ({ object }) => {
+      console.log(object);
+      if (object?.nodes.length) {
+        object.nodes.forEach((node) => {
+          const newNodeId = generateId();
+          const newNode = {
+            id: newNodeId,
+            type: node.type,
+            data: node.data,
+            position: { x: 0, y: 0 },
+          };
+          const newEdge = {
+            id: `${id}-${newNodeId}`,
+            source: id,
+            target: newNodeId,
+          };
         });
       }
     },
   });
-  useEffect(() => {
-    if (object) {
-      console.log(object);
-    }
-  }, [object]);
+  // Streamed object
+  // useEffect(() => {
+  //   if (object) {
+  //     console.log(object);
+  //   }
+  // }, [object]);
   const handleSubmit = () => {
     submit({ prompt });
   };
