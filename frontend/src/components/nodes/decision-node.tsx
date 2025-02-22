@@ -1,13 +1,15 @@
 "use client";
 
-import { Handle, Node, NodeProps, Position } from "@xyflow/react";
+import { Edge, Handle, Node, NodeProps, Position } from "@xyflow/react";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { experimental_useObject as useObject } from "@ai-sdk/react";
 import { nodeSchema } from "@/types/schema";
 import { generateId } from "ai";
-// import { CheckIcon, XIcon } from "@heroicons/react/outline";
+import useStore from "@/store/node-store";
+import { AppNode } from "@/store/types";
+
 export type DecisionNodeData = Node<{
   question: string;
   options: string[];
@@ -18,19 +20,17 @@ export function DecisionNode({
   data,
   isConnectable,
 }: NodeProps<DecisionNodeData>) {
-<<<<<<< Updated upstream
+  const { setNodes, setEdges } = useStore();
   const [question, setQuestion] = useState(data.question);
   const [options, setOptions] = useState(data.options);
-=======
-  const [prompt, setPrompt] = useState(data.prompt);
-  //   don't bring it in from parent component, this is user feedback
->>>>>>> Stashed changes
   const [option, setOption] = useState("");
   const { submit, isLoading, error, object } = useObject({
     id,
     api: "/api/ai",
     schema: nodeSchema,
     onFinish: ({ object }) => {
+      const newNodes: AppNode[] = [];
+      const newEdges: Edge[] = [];
       console.log(object);
       if (object?.nodes.length) {
         object.nodes.forEach((node) => {
@@ -46,8 +46,12 @@ export function DecisionNode({
             source: id,
             target: newNodeId,
           };
+          newNodes.push(newNode);
+          newEdges.push(newEdge);
         });
       }
+      setNodes(newNodes);
+      setEdges(newEdges);
     },
   });
   // Streamed object
@@ -58,7 +62,34 @@ export function DecisionNode({
   // }, [object]);
   const handleSubmit = (option: string) => {
     setOption(option);
-    submit({ question, options, option });
+    const contextNodes = useStore
+      .getState()
+      .nodes.filter((node) => !node.id.startsWith(`${id}-`))
+      .map(({ type, data, id }) => ({
+        id,
+        type,
+        data,
+      }));
+    const contextEdges = useStore
+      .getState()
+      .edges.filter((edge) => !edge.target.startsWith(`${id}-`))
+      .map(({ id, source, target }) => ({
+        id,
+        source,
+        target,
+      }));
+    submit({
+      messages: [
+        {
+          role: "user",
+          content: `Selected option: "${option}" for the question: "${question}"`,
+        },
+      ],
+      nodeTree: contextNodes,
+      edgeTree: contextEdges,
+      currentNodeId: id,
+      currentNodeType: "decision",
+    });
   };
   return (
     <Card className="w-[300px]">
