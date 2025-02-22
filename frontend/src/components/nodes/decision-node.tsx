@@ -1,17 +1,16 @@
 "use client";
 
 import { Handle, Node, NodeProps, Position } from "@xyflow/react";
-import { useEffect, useState } from "react";
-import { Card, CardContent } from "../ui/card";
-import { Input } from "../ui/input";
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { experimental_useObject as useObject } from "@ai-sdk/react";
 import { nodeSchema } from "@/types/schema";
 import { generateId } from "ai";
 // import { CheckIcon, XIcon } from "@heroicons/react/outline";
 export type DecisionNodeData = Node<{
-  prompt: string;
-  option: string;
+  question: string;
+  options: string[];
 }>;
 
 export function DecisionNode({
@@ -19,7 +18,8 @@ export function DecisionNode({
   data,
   isConnectable,
 }: NodeProps<DecisionNodeData>) {
-  const [prompt, setPrompt] = useState(data.prompt);
+  const [question, setQuestion] = useState(data.question);
+  const [options, setOptions] = useState(data.options);
   const [option, setOption] = useState("");
   const { submit, isLoading, error, object } = useObject({
     id,
@@ -53,19 +53,19 @@ export function DecisionNode({
   // }, [object]);
   const handleSubmit = (option: string) => {
     setOption(option);
-    submit({ prompt });
+    submit({ question, options, option });
   };
   return (
-    <Card>
+    <Card className="w-[300px]">
+      <CardHeader>
+        <CardTitle>{question}</CardTitle>
+      </CardHeader>
       <CardContent className="flex flex-col gap-2 p-2">
-        {/* <Input
-          type="text"
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-        /> */}
-        {/* <Button onClick={handleSubmit}>Generate</Button> */}
-        <Button onClick={() => handleSubmit("YES")}>Yes</Button>
-        <Button onClick={() => handleSubmit("NO")}>No</Button>
+        {options.map((option) => (
+          <Button key={option} onClick={() => handleSubmit(option)}>
+            {option}
+          </Button>
+        ))}
       </CardContent>
       <Handle type="source" position={Position.Top} />
       <Handle type="target" position={Position.Bottom} />

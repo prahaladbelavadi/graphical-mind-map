@@ -1,10 +1,7 @@
 "use client";
 
 import { Handle, Node, NodeProps, Position, Edge } from "@xyflow/react";
-import { useEffect, useState } from "react";
 import { Card, CardContent } from "../ui/card";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
 import { experimental_useObject as useObject } from "@ai-sdk/react";
 import { nodeSchema } from "@/types/schema";
 import { generateId } from "ai";
@@ -55,11 +52,9 @@ export function TaskNode({ id, data, isConnectable }: NodeProps<TaskNodeData>) {
   //     console.log(object);
   //   }
   // }, [object]);
-  const handleSubmit = () => {
-    submit({ prompt });
-  };
+
   return (
-    <Card>
+    <Card className="w-[300px]">
       <CardContent className="flex flex-col gap-2 p-2">
         <h3 className="text-lg font-bold">{data.name}</h3>
         <p className="text-sm text-gray-500">{data.description}</p>

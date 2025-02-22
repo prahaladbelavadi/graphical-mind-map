@@ -1,3 +1,4 @@
+// lib/schemas.ts
 import { z } from "zod";
 
 // Base schema
@@ -17,6 +18,12 @@ const errorNodeSchema = baseNodeSchema.extend({
 
 // Valid Node Types
 const validNodeSchema = z.discriminatedUnion("type", [
+  // baseNodeSchema.extend({
+  //   type: z.literal("conversational"),
+  //   data: z.object({
+  //     content: z.string(),
+  //   }),
+  // }),
   baseNodeSchema.extend({
     type: z.literal("task"),
     data: z.object({
@@ -26,18 +33,20 @@ const validNodeSchema = z.discriminatedUnion("type", [
     }),
   }),
   // baseNodeSchema.extend({
-  //   type: z.literal("decision"),
+  //   type: z.literal("explanation"),
   //   data: z.object({
-  //     question: z.string(),
-  //     options: z.array(z.string()),
+  //     title: z.string(),
+  //     steps: z.array(z.string()),
+  //     summary: z.string(),
   //   }),
   // }),
-  // baseNodeSchema.extend({
-  //   type: z.literal("conversational"),
-  //   data: z.object({
-  //     content: z.string(),
-  //   }),
-  // }),
+  baseNodeSchema.extend({
+    type: z.literal("decision"),
+    data: z.object({
+      question: z.string(),
+      options: z.array(z.string()),
+    }),
+  }),
 ]);
 
 // Unified Schema
@@ -52,7 +61,15 @@ export const nodeSchema = z
   })
   .superRefine((val, ctx) => {
     val.nodes.forEach((node, index) => {
-      if (!["task",  "error"].includes(node.type)) {
+      if (
+        ![
+          "task",
+          "decision",
+          "error",
+          // "conversational",
+          // "explanation",
+        ].includes(node.type)
+      ) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: `Invalid node type '${node.type}' at index ${index}`,

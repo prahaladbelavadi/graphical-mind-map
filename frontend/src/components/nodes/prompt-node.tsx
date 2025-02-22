@@ -58,10 +58,37 @@ export function PromptNode({
   //   }
   // }, [object]);
   const handleSubmit = () => {
-    submit({ prompt });
+    if (!prompt.trim()) {
+      return;
+    }
+    // Get current nodes and edges, except for child nodes of the current node
+    const contextNodes = useStore
+      .getState()
+      .nodes.filter((node) => !node.id.startsWith(`${id}-`))
+      .map(({ type, data, id }) => ({
+        id,
+        type,
+        data,
+      }));
+    const contextEdges = useStore
+      .getState()
+      .edges.filter((edge) => !edge.target.startsWith(`${id}-`))
+      .map(({ id, source, target }) => ({
+        id,
+        source,
+        target,
+      }));
+
+    submit({
+      messages: [{ role: "user", content: prompt }],
+      nodeTree: contextNodes,
+      edgeTree: contextEdges,
+      currentNodeId: id,
+      currentNodeType: "prompt",
+    });
   };
   return (
-    <Card>
+    <Card className="w-[300px]">
       <CardContent className="flex flex-col gap-2 p-2">
         <Input
           type="text"
