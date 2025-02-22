@@ -54,7 +54,7 @@ export function TaskNode({ id, data, isConnectable }: NodeProps<TaskNodeData>) {
   // }, [object]);
 
   return (
-    <Card className="w-[300px]">
+    <Card className="w-300px w-[300px]">
       <h3>Task</h3>
       <CardContent className="flex flex-col gap-2 p-2">
         <h3 className="text-lg font-bold">{data.name}</h3>

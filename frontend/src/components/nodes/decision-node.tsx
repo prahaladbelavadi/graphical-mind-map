@@ -100,7 +100,7 @@ export function DecisionNode({
     });
   };
   return (
-    <Card className="w-[300px]">
+    <Card className="w-300px w-[300px]">
       <CardHeader>
         <CardTitle>{question}</CardTitle>
       </CardHeader>
