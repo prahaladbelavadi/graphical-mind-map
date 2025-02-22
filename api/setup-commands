@@ -1,0 +1,5 @@
+mkdir express-sample-app
+cd express-sample-app
+npm init -y
+npm install express dotenv @opensearch-project/opensearch --save-dev nodemon
+npm install --save-dev nodemon 

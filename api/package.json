@@ -1,0 +1,26 @@
+{
+  "name": "express-sample-app",
+  "version": "1.0.0",
+  "description": "Express sample app with OpenSearch integration",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "init-db": "node scripts/init-opensearch.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "dotenv": "^16.3.1",
+    "@opensearch-project/opensearch": "^2.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "keywords": [
+    "express",
+    "opensearch",
+    "api"
+  ],
+  "author": "",
+  "license": "ISC"
+} 
