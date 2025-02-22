@@ -62,7 +62,7 @@ export function CodeNode({ id, data, isConnectable }: NodeProps<CodeNode>) {
     // submit({ prompt });
   };
   return (
-    <Card className="w-300px">
+    <Card className="w-[300px]">
       <CardContent className="flex flex-col gap-2 p-2">
         <h3>Code</h3>
         <pre>

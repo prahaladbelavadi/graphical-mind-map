@@ -89,7 +89,7 @@ export function PromptNode({
     });
   };
   return (
-    <Card className="w-300px">
+    <Card className="w-[300px]">
       <CardContent className="flex flex-col gap-2 p-2">
         <h3>Prompt</h3>
         <Input
