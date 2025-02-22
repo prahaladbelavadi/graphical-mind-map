@@ -21,6 +21,8 @@ export default function HomePage() {
    <div className="h-screen w-full">
    <ReactFlowProvider>
     <ReactFlow
+    fitView
+colorMode="dark"
       nodeTypes={nodeTypes}
       proOptions={{
         hideAttribution: true,
