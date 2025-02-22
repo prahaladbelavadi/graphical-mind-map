@@ -9,6 +9,9 @@ import { type AppState } from './types';
 const useStore = create<AppState>((set, get) => ({
   nodes: initialNodes,
   edges: initialEdges,
+  getNode: (id: string) => get().nodes.find((node) => node.id === id),
+  getNodes: () => get().nodes,
+  getEdges: () => get().edges,
   onNodesChange: (changes) => {
     set({
       nodes: applyNodeChanges(changes, get().nodes),

@@ -3,11 +3,14 @@ import { type Edge, type Node, type OnNodesChange, type OnEdgesChange, type OnCo
 export type AppNode = Node;
 
 export type AppState = {
-nodes: AppNode[];
-edges: Edge[];
-onNodesChange: OnNodesChange<AppNode>;
-onEdgesChange: OnEdgesChange;
-onConnect: OnConnect;
-setNodes: (nodes: AppNode[]) => void;
-setEdges: (edges: Edge[]) => void;
+  nodes: AppNode[];
+  edges: Edge[];
+  getNode: (id: string) => AppNode | undefined;
+  getNodes: () => AppNode[];
+  getEdges: () => Edge[];
+  onNodesChange: OnNodesChange<AppNode>;
+  onEdgesChange: OnEdgesChange;
+  onConnect: OnConnect;
+  setNodes: (nodes: AppNode[]) => void;
+  setEdges: (edges: Edge[]) => void;
 };

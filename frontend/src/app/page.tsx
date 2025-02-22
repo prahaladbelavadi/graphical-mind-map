@@ -9,6 +9,7 @@ import "@xyflow/react/dist/style.css";
 import { useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 import useLayout from "@/hooks/use-layout";
+import { CodeNode } from "@/components/nodes/code-node";
 
 export function Home() {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useStore(
@@ -25,6 +26,7 @@ export function Home() {
       prompt: PromptNode,
       task: TaskNode,
       decision: DecisionNode,
+      code: CodeNode,
     }),
     [],
   );

@@ -32,6 +32,13 @@ export function DecisionNode({
       const newNodes: AppNode[] = [];
       const newEdges: Edge[] = [];
       console.log(object);
+      const parentNode = useStore
+        .getState()
+        .nodes.find((node) => node.id === id);
+      if (!parentNode) {
+        console.error("Parent node not found");
+        return;
+      }
       if (object?.nodes.length) {
         object.nodes.forEach((node) => {
           const newNodeId = generateId();
@@ -40,6 +47,7 @@ export function DecisionNode({
             type: node.type,
             data: node.data,
             position: { x: 0, y: 0 },
+            parentId: id,
           };
           const newEdge = {
             id: `${id}-${newNodeId}`,

@@ -1,18 +1,13 @@
 import { useEffect, useRef } from "react";
-import {
-  useReactFlow,
-  useStore,
-  Node,
-  Edge,
-  ReactFlowState,
-} from "@xyflow/react";
+import { useReactFlow, type Node, type Edge } from "@xyflow/react";
 import { stratify, tree } from "d3-hierarchy";
 import { timer } from "d3-timer";
-
+import useAppStore from "@/store/node-store";
+import { type AppState } from "@/store/types";
 // initialize the tree layout (see https://observablehq.com/@d3/tree for examples)
 const layout = tree<Node>()
   // the node size configures the spacing between the nodes ([width, height])
-  .nodeSize([300, 150])
+  .nodeSize([300, 200])
   // this is needed for creating equal space between all nodes
   .separation(() => 1.05);
 
@@ -44,9 +39,6 @@ function layoutNodes(nodes: Node[], edges: Edge[]): Node[] {
     .map((d) => ({ ...d.data, position: { x: d.x, y: d.y } }));
 }
 
-// this is the store selector that is used for triggering the layout, this returns the number of nodes once they change
-const nodeCountSelector = (state: ReactFlowState) => state.nodeLookup.size;
-
 function useLayout() {
   // this ref is used to fit the nodes in the first run
   // after first run, this is set to false
@@ -54,10 +46,11 @@ function useLayout() {
 
   // we are using nodeCount as the trigger for the re-layouting
   // whenever the nodes length changes, we calculate the new layout
-  const nodeCount = useStore(nodeCountSelector);
 
-  const { getNodes, getNode, setNodes, setEdges, getEdges, fitView } =
-    useReactFlow();
+  const { fitView } = useReactFlow();
+  const { setNodes, setEdges, getNode, getNodes, getEdges } = useAppStore();
+  const nodeCountSelector = (state: AppState) => state.nodes.length;
+  const nodeCount = useAppStore(nodeCountSelector);
 
   useEffect(() => {
     // get the current nodes and edges
@@ -75,7 +68,7 @@ function useLayout() {
       return {
         id: node.id,
         // this is where the node currently is placed
-        from: getNode(node.id)?.position || node.position,
+        from: getNode(node.id)?.position ?? node.position,
         // this is where we want the node to be placed
         to: node.position,
         node,
@@ -120,7 +113,7 @@ function useLayout() {
 
         // in the first run, fit the view
         if (!initial.current) {
-          fitView({ duration: 200, padding: 0.2 });
+          void fitView({ duration: 200, padding: 0.2 });
         }
         initial.current = false;
       }
@@ -129,7 +122,7 @@ function useLayout() {
     return () => {
       t.stop();
     };
-  }, [nodeCount, getEdges, getNodes, getNode, setNodes, fitView, setEdges]);
+  }, [nodeCount, getNodes, getEdges, getNode, setNodes, fitView, setEdges]);
 }
 
 export default useLayout;
