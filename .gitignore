@@ -39,3 +39,5 @@ yarn-error.log*
 .vscode/
 *.swp
 *.swo 
+myenv/bin/activate
+/myenv

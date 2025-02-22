@@ -5,26 +5,11 @@ A platform for analyzing chat conversations using AI to extract themes and insig
 ## Setup
 
 1. Create and activate virtual environment:
-   ```bash
-   # On Windows
-   python -m venv venv
-   .\venv\Scripts\activate
-
-   # On macOS/Linux
-   python -m venv venv
-   source venv/bin/activate
-   ```
-
-   2. Create virtual env and Install dependencies:
+   Create virtual env and Install dependencies:
     `python -m venv myenv`
     `source myenv/bin/activate`
     `pip install -r requirements.txt`
 
-2. Install dependencies:
-   ```bash
-   cd backend
-   pip install -r requirements.txt
-   ```
 
 3. Create a `.env` file with required environment variables:
    ```
@@ -32,10 +17,12 @@ A platform for analyzing chat conversations using AI to extract themes and insig
    OPENSEARCH_URL=https://localhost:9200
    ```
 
-4. Start the services:
-   ```bash
-   docker-compose up
-   ```
+Start the OpenSearch container:
+ - ```docker-compose up --build```
+ #### You can verify opensearch is running with this command: ```curl http://localhost:9200```
+ #### To access OpenSearch Dashboards: Open a web browser and navigate to: ```http://localhost:5601/app/home```
+
+
 
 5. Start the backend:
    ```bash
