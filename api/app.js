@@ -13,7 +13,12 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 const userRoutes = require('./routes/userRoutes');
+const conversationRoutes = require('./routes/conversationRoutes');
+const themeRoutes = require('./routes/themeRoutes');
+
 app.use('/api/users', userRoutes);
+app.use('/api/conversations', conversationRoutes);
+app.use('/api/themes', themeRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
