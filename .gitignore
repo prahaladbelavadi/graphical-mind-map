@@ -41,3 +41,5 @@ yarn-error.log*
 *.swo 
 myenv/bin/activate
 /myenv
+
+conversations.json

@@ -1,4 +1,4 @@
-from opensearch_py import OpenSearch
+from opensearchpy import OpenSearch
 from ..models import Theme, Conversation
 
 class OpenSearchService:
