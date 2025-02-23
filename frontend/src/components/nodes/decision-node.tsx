@@ -116,7 +116,8 @@ export function DecisionNode({
           🤔 Decision
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-2 p-4 pt-0">
+      <CardContent className="space-y-2 p-4">
+        <p className="text-sm text-muted-foreground">{question}</p>
         {error && (
           <div className="flex items-center gap-2 rounded-md bg-destructive/10 p-2 text-sm text-destructive">
             <AlertCircle className="h-4 w-4" />
