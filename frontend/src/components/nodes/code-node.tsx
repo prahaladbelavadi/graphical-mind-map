@@ -67,7 +67,10 @@ export function CodeNode({ id, data, isConnectable }: NodeProps<CodeNode>) {
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
-        <ScrollArea className="h-[200px] w-full rounded-md">
+        <ScrollArea
+          className="h-[200px] w-full rounded-md"
+          onWheel={(e) => e.stopPropagation()}
+        >
           <pre className="bg-muted/50 p-4">
             <code className="whitespace-pre-wrap break-words font-mono text-sm text-foreground">
               {code}

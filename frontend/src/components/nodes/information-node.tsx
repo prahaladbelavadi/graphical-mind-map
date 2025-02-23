@@ -1,16 +1,24 @@
 "use client";
 
-import { Edge, Handle, Node, NodeProps, Position } from "@xyflow/react";
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Button } from "../ui/button";
+import {
+  type Edge,
+  Handle,
+  type Node,
+  type NodeProps,
+  Position,
+} from "@xyflow/react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { experimental_useObject as useObject } from "@ai-sdk/react";
 import { nodeSchema } from "@/types/schema";
 import { generateId } from "ai";
 import useStore from "@/store/node-store";
-import { AppNode } from "@/store/types";
+import type { AppNode } from "@/store/types";
+import { nodeStyles } from "@/styles/node-styles";
+import { BookOpen, Hash } from "lucide-react";
 
-export type InformationNode = Node<{
+type InformationNode = Node<{
   content: string;
   references: string[];
   tags: string[];
@@ -22,9 +30,7 @@ export function InformationNode({
   isConnectable,
 }: NodeProps<InformationNode>) {
   const { setNodes, setEdges, nodes, edges } = useStore();
-  const [content, setContent] = useState(data.content);
-  const [references, setReferences] = useState(data.references);
-  const [tags, setTags] = useState(data.tags);
+
   const { submit, isLoading, error, object } = useObject({
     id,
     api: "/api/ai",
@@ -32,14 +38,16 @@ export function InformationNode({
     onFinish: ({ object }) => {
       const newNodes: AppNode[] = [];
       const newEdges: Edge[] = [];
-      console.log(object);
+
       const parentNode = useStore
         .getState()
         .nodes.find((node) => node.id === id);
+
       if (!parentNode) {
         console.error("Parent node not found");
         return;
       }
+
       if (object?.nodes.length) {
         object.nodes.forEach((node) => {
           const newNodeId = generateId();
@@ -63,69 +71,70 @@ export function InformationNode({
       setNodes([...nodes, ...newNodes]);
     },
   });
-  // Streamed object
-  // useEffect(() => {
-  //   if (object) {
-  //     console.log(object);
-  //   }
-  // }, [object]);
-  const handleSubmit = () => {
-    // setOption(option);
-    // const contextNodes = useStore
-    //   .getState()
-    //   .nodes.filter((node) => !node.id.startsWith(`${id}-`))
-    //   .map(({ type, data, id }) => ({
-    //     id,
-    //     type,
-    //     data,
-    //   }));
-    // const contextEdges = useStore
-    //   .getState()
-    //   .edges.filter((edge) => !edge.target.startsWith(`${id}-`))
-    //   .map(({ id, source, target }) => ({
-    //     id,
-    //     source,
-    //     target,
-    //   }));
-    // submit({
-    //   messages: [
-    //     {
-    //       role: "user",
-    //       content: `Selected option: "${option}" for the question: "${question}"`,
-    //     },
-    //   ],
-    //   nodeTree: contextNodes,
-    //   edgeTree: contextEdges,
-    //   currentNodeId: id,
-    //   currentNodeType: "decision",
-    // });
-  };
+
   return (
-    //     content: string;
-    //   references: string[];
-    //   tags: string[];
+    <Card className={nodeStyles.card}>
+      <CardHeader className={nodeStyles.header}>
+        <CardTitle className={nodeStyles.title}>📚 Info</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4 p-4">
+        <ScrollArea
+          className="h-[120px] w-full rounded-md"
+          onWheel={(e) => e.stopPropagation()}
+        >
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            {data.content}
+          </p>
+        </ScrollArea>
 
-    <Card className="w-[300px]">
-      <CardContent className="flex flex-col gap-2 p-2">
-        <h3>Content</h3>
-        <p>{content}</p>
-        <h3>References</h3>
-        <ul>
-          {references.map((ref, index) => (
-            <li key={index}>{ref}</li>
-          ))}
-        </ul>
+        {data.references.length > 0 && (
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <BookOpen className="h-3 w-3" />
+              <span>References</span>
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {data.references.map((ref, index) => (
+                <Badge
+                  key={index}
+                  variant="outline"
+                  className="bg-muted/50 text-xs"
+                >
+                  {ref}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        )}
 
-        <p>Tags</p>
-        <ul>
-          {tags.map((tag, index) => (
-            <li key={index}>{tag}</li>
-          ))}
-        </ul>
-        <ul></ul>
+        {data.tags.length > 0 && (
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Hash className="h-3 w-3" />
+              <span>Tags</span>
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {data.tags.map((tag, index) => (
+                <Badge key={index} variant="secondary" className="text-xs">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        )}
       </CardContent>
-      <Handle type="source" position={Position.Top} />
-      <Handle type="target" position={Position.Bottom} />
+      <Handle
+        type="target"
+        position={Position.Top}
+        isConnectable={isConnectable}
+        className={nodeStyles.handle}
+      />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        isConnectable={isConnectable}
+        className={nodeStyles.handle}
+      />
     </Card>
   );
 }

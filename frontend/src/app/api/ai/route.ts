@@ -37,7 +37,8 @@ export async function POST(req: Request) {
 
   RESPONSE RULES:
   1. Maintain logical workflow continuity
-  2. Try to respond with at least 5 nodes, but try for more where possible. 
+  2. Try to respond with at least 5 nodes, but try for more where possible.
+  3. Only use appropriate node types for the given request.
   `;
 
   const result = streamObject({

@@ -116,7 +116,7 @@ export function PromptNode({
         <CardTitle className={nodeStyles.title}>💭 Prompt</CardTitle>
       </CardHeader>
       <CardContent className={nodeStyles.content}>
-        <div className="relative">
+        <div className="relative" onWheel={(e) => e.stopPropagation()}>
           <Textarea
             ref={textareaRef}
             value={prompt}

@@ -10,7 +10,7 @@ import { useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 import useLayout from "@/hooks/use-layout";
 import { CodeNode } from "@/components/nodes/code-node";
-
+import { InformationNode } from "@/components/nodes/information-node";
 export function Home() {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useStore(
     useShallow((state) => ({
@@ -27,6 +27,7 @@ export function Home() {
       task: TaskNode,
       decision: DecisionNode,
       code: CodeNode,
+      information: InformationNode,
     }),
     [],
   );
@@ -40,6 +41,7 @@ export function Home() {
         proOptions={{
           hideAttribution: true,
         }}
+        nodesDraggable={false}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}

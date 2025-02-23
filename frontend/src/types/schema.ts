@@ -32,6 +32,14 @@ const validNodeSchema = z.discriminatedUnion("type", [
     }),
   }),
   baseNodeSchema.extend({
+    type: z.literal("information"),
+    data: z.object({
+      content: z.string(),
+      references: z.array(z.string()),
+      tags: z.array(z.string()),
+    }),
+  }),
+  baseNodeSchema.extend({
     type: z.literal("task"),
     data: z.object({
       name: z.string(),
@@ -73,6 +81,7 @@ export const nodeSchema = z
           "task",
           "decision",
           "error",
+          "information",
           "code",
           // "conversational",
           // "explanation",
