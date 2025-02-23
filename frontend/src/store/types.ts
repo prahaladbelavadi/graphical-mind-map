@@ -5,6 +5,7 @@ export type AppNode = Node;
 export type AppState = {
   nodes: AppNode[];
   edges: Edge[];
+  addPromptNode: (id: string) => void;
   getNode: (id: string) => AppNode | undefined;
   getNodes: () => AppNode[];
   getEdges: () => Edge[];

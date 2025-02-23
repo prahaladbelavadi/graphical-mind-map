@@ -4,7 +4,12 @@ import { PromptNode } from "@/components/nodes/prompt-node";
 import { TaskNode } from "@/components/nodes/task-node";
 import { DecisionNode } from "@/components/nodes/decision-node";
 import useStore from "@/store/node-store";
-import { Background, ReactFlow, ReactFlowProvider } from "@xyflow/react";
+import {
+  Background,
+  Controls,
+  ReactFlow,
+  ReactFlowProvider,
+} from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
@@ -48,6 +53,7 @@ export function Home() {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
       >
+        <Controls />
         <Background />
       </ReactFlow>
     </div>

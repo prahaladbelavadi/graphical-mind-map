@@ -2,7 +2,13 @@
 
 import { Handle, type Node, type NodeProps, Position } from "@xyflow/react";
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { experimental_useObject as useObject } from "@ai-sdk/react";
 import { nodeSchema } from "@/types/schema";
@@ -10,6 +16,7 @@ import { generateId } from "ai";
 import useStore from "@/store/node-store";
 import type { AppNode } from "@/store/types";
 import type { Edge } from "@xyflow/react";
+import { Button } from "../ui/button";
 
 type CodeNode = Node<{
   explanation: string;
@@ -20,7 +27,7 @@ export function CodeNode({ id, data, isConnectable }: NodeProps<CodeNode>) {
   const [prompt, setPrompt] = useState(data.explanation);
   const [code, setCode] = useState(data.code);
   const [loading, setLoading] = useState(true);
-  const { setNodes, setEdges } = useStore();
+  const { setNodes, setEdges, addPromptNode } = useStore();
 
   const { submit, isLoading, error, object } = useObject({
     id,
@@ -59,6 +66,10 @@ export function CodeNode({ id, data, isConnectable }: NodeProps<CodeNode>) {
     // submit({ prompt })
   };
 
+  const handleAddPromptNode = () => {
+    addPromptNode(id);
+  };
+
   return (
     <Card className="min-h-[200px] w-[300px]">
       <CardHeader className="space-y-0 border-b px-4 py-2">
@@ -78,6 +89,12 @@ export function CodeNode({ id, data, isConnectable }: NodeProps<CodeNode>) {
           </pre>
         </ScrollArea>
       </CardContent>
+
+      <CardFooter>
+        <Button className="w-full" onClick={handleAddPromptNode}>
+          Add Prompt
+        </Button>
+      </CardFooter>
       <Handle
         type="target"
         position={Position.Top}

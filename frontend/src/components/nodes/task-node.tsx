@@ -7,7 +7,13 @@ import {
   Position,
   type Edge,
 } from "@xyflow/react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { experimental_useObject as useObject } from "@ai-sdk/react";
 import { nodeSchema } from "@/types/schema";
@@ -16,7 +22,8 @@ import useStore from "@/store/node-store";
 import type { AppNode } from "@/store/types";
 import { nodeStyles } from "@/styles/node-styles";
 import { cn } from "@/library/utils";
-
+import { useCallback } from "react";
+import { Button } from "../ui/button";
 export type TaskNodeData = Node<{
   name: string;
   description: string;
@@ -30,7 +37,7 @@ const difficultyColors = {
 } as const;
 
 export function TaskNode({ id, data, isConnectable }: NodeProps<TaskNodeData>) {
-  const { nodes, edges, setNodes, setEdges } = useStore();
+  const { nodes, edges, setNodes, setEdges, addPromptNode } = useStore();
 
   const { submit, isLoading, error, object } = useObject({
     id,
@@ -62,7 +69,9 @@ export function TaskNode({ id, data, isConnectable }: NodeProps<TaskNodeData>) {
       setEdges([...edges, ...newEdges]);
     },
   });
-
+  const handleAddPromptNode = useCallback(() => {
+    addPromptNode(id);
+  }, [addPromptNode, id]);
   return (
     <Card className={nodeStyles.card}>
       <CardHeader className={nodeStyles.header}>
@@ -82,6 +91,11 @@ export function TaskNode({ id, data, isConnectable }: NodeProps<TaskNodeData>) {
           </Badge>
         </div>
       </CardContent>
+      <CardFooter>
+        <Button className="w-full" onClick={handleAddPromptNode}>
+          Add Prompt
+        </Button>
+      </CardFooter>
       <Handle
         type="target"
         position={Position.Top}

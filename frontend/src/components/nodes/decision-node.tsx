@@ -8,7 +8,13 @@ import {
   Position,
 } from "@xyflow/react";
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { experimental_useObject as useObject } from "@ai-sdk/react";
 import { nodeSchema } from "@/types/schema";
@@ -17,6 +23,7 @@ import useStore from "@/store/node-store";
 import type { AppNode } from "@/store/types";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { cn } from "@/library/utils";
+import { Separator } from "../ui/separator";
 
 export type DecisionNodeData = Node<{
   question: string;
@@ -28,7 +35,7 @@ export function DecisionNode({
   data,
   isConnectable,
 }: NodeProps<DecisionNodeData>) {
-  const { setNodes, setEdges, nodes, edges } = useStore();
+  const { setNodes, setEdges, nodes, edges, addPromptNode } = useStore();
   const [question] = useState(data.question);
   const [options] = useState(data.options);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -109,6 +116,10 @@ export function DecisionNode({
     });
   };
 
+  const handleAddPromptNode = () => {
+    addPromptNode(id);
+  };
+
   return (
     <Card className="min-h-[200px] w-[300px]">
       <CardHeader className="space-y-0 border-b px-4 py-2">
@@ -145,6 +156,12 @@ export function DecisionNode({
           ))}
         </div>
       </CardContent>
+
+      <CardFooter>
+        <Button className="w-full" onClick={handleAddPromptNode}>
+          Add Prompt
+        </Button>
+      </CardFooter>
       <Handle
         type="target"
         position={Position.Top}

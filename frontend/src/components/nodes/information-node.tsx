@@ -7,7 +7,13 @@ import {
   type NodeProps,
   Position,
 } from "@xyflow/react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { experimental_useObject as useObject } from "@ai-sdk/react";
@@ -17,6 +23,8 @@ import useStore from "@/store/node-store";
 import type { AppNode } from "@/store/types";
 import { nodeStyles } from "@/styles/node-styles";
 import { BookOpen, Hash } from "lucide-react";
+import { useCallback } from "react";
+import { Button } from "../ui/button";
 
 type InformationNode = Node<{
   content: string;
@@ -29,7 +37,7 @@ export function InformationNode({
   data,
   isConnectable,
 }: NodeProps<InformationNode>) {
-  const { setNodes, setEdges, nodes, edges } = useStore();
+  const { setNodes, setEdges, nodes, edges, addPromptNode } = useStore();
 
   const { submit, isLoading, error, object } = useObject({
     id,
@@ -71,7 +79,9 @@ export function InformationNode({
       setNodes([...nodes, ...newNodes]);
     },
   });
-
+  const handleAddPromptNode = useCallback(() => {
+    addPromptNode(id);
+  }, [addPromptNode, id]);
   return (
     <Card className={nodeStyles.card}>
       <CardHeader className={nodeStyles.header}>
@@ -123,6 +133,11 @@ export function InformationNode({
           </div>
         )}
       </CardContent>
+      <CardFooter>
+        <Button className="w-full" onClick={handleAddPromptNode}>
+          Add Prompt
+        </Button>
+      </CardFooter>
       <Handle
         type="target"
         position={Position.Top}
