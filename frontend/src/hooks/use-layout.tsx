@@ -7,7 +7,7 @@ import { type AppState } from "@/store/types";
 // initialize the tree layout (see https://observablehq.com/@d3/tree for examples)
 const layout = tree<Node>()
   // the node size configures the spacing between the nodes ([width, height])
-  .nodeSize([300, 200])
+  .nodeSize([300, 300])
   // this is needed for creating equal space between all nodes
   .separation(() => 1.05);
 

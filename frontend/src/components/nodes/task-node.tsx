@@ -1,17 +1,33 @@
 "use client";
 
-import { Handle, Node, NodeProps, Position, Edge } from "@xyflow/react";
-import { Card, CardContent } from "../ui/card";
+import {
+  Handle,
+  type Node,
+  type NodeProps,
+  Position,
+  type Edge,
+} from "@xyflow/react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { experimental_useObject as useObject } from "@ai-sdk/react";
 import { nodeSchema } from "@/types/schema";
 import { generateId } from "ai";
 import useStore from "@/store/node-store";
-import { AppNode } from "@/store/types";
+import type { AppNode } from "@/store/types";
+import { nodeStyles } from "@/styles/node-styles";
+import { cn } from "@/library/utils";
+
 export type TaskNodeData = Node<{
   name: string;
   description: string;
   difficulty: "easy" | "medium" | "hard";
 }>;
+
+const difficultyColors = {
+  easy: "bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/10",
+  medium: "bg-amber-500/10 text-amber-500 hover:bg-amber-500/10",
+  hard: "bg-rose-500/10 text-rose-500 hover:bg-rose-500/10",
+} as const;
 
 export function TaskNode({ id, data, isConnectable }: NodeProps<TaskNodeData>) {
   const { nodes, edges, setNodes, setEdges } = useStore();
@@ -21,9 +37,9 @@ export function TaskNode({ id, data, isConnectable }: NodeProps<TaskNodeData>) {
     api: "/api/ai",
     schema: nodeSchema,
     onFinish: ({ object }) => {
-      console.log(object);
       const newNodes: AppNode[] = [];
       const newEdges: Edge[] = [];
+
       if (object?.nodes.length) {
         object.nodes.forEach((node) => {
           const newNodeId = generateId();
@@ -46,30 +62,37 @@ export function TaskNode({ id, data, isConnectable }: NodeProps<TaskNodeData>) {
       setEdges([...edges, ...newEdges]);
     },
   });
-  // Streamed object
-  // useEffect(() => {
-  //   if (object) {
-  //     console.log(object);
-  //   }
-  // }, [object]);
 
   return (
-    <Card className="w-[300px]">
-      <h3>Task</h3>
-      <CardContent className="flex flex-col gap-2 p-2">
-        <h3 className="text-lg font-bold">{data.name}</h3>
-        <p className="text-sm text-gray-500">{data.description}</p>
-        <p className="text-sm text-gray-500">{data.difficulty}</p>
+    <Card className={nodeStyles.card}>
+      <CardHeader className={nodeStyles.header}>
+        <CardTitle className={nodeStyles.title}>✨ Task</CardTitle>
+      </CardHeader>
+      <CardContent className={nodeStyles.content}>
+        <div className="space-y-2">
+          <h3 className="font-semibold leading-none tracking-tight">
+            {data.name}
+          </h3>
+          <p className="text-sm text-muted-foreground">{data.description}</p>
+          <Badge
+            variant="secondary"
+            className={cn("font-normal", difficultyColors[data.difficulty])}
+          >
+            {data.difficulty}
+          </Badge>
+        </div>
       </CardContent>
       <Handle
         type="target"
         position={Position.Top}
         isConnectable={isConnectable}
+        className={nodeStyles.handle}
       />
       <Handle
         type="source"
         position={Position.Bottom}
         isConnectable={isConnectable}
+        className={nodeStyles.handle}
       />
     </Card>
   );
